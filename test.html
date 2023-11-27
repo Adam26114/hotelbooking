@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <script id="steps_tpl" type="text/x-handlebars-template">
+    <nav class="nav has-shadow">
+      <div class="fluid-container">
+        <div class="nav-left">
+          {{#each appContext.steps}}
+            <a href="#" class="nav-item">{{this}}</a>
+          {{/each}}
+        </div>
+      </div>
+    </nav>
+  </script>
+  <!-- Steps -->
+  
+  <script id="header_tpl" type="text/x-handlebars-template">
+  <header>
+    {{> steps}}
+  </header>
+  </script>
+  <!-- Header -->
+  
+  <script id="property_selection_tpl" type="text/x-handlebars-template">
+  <select name="property_code" id="property_code" class="ui fluid dropdown">
+    <option value="">-- Select Hotel --</option>
+    {{#each data.properties}}
+    <option value="{{code}}">{{name}}</option>
+    {{/each}}
+  </select>
+  </script>
+  <!-- Property Selection -->
+  
+  <script id="currency_selection_tpl" type="text/x-handlebars-template">
+  <select name="" id="currency">
+    {{#each currencies}}
+    <option value="{{code}}">{{#if default}}Hotel Currency - {{/if}} {{code}}</option>
+    {{/each}}
+  </select>
+  </script>
+  <!-- Currency Selection -->
+  
+  <script id="booking_form_tpl" type="text/x-handlebars-template">
+            <div class="panel">
+              <div class="panel-block is-block-mobile">
+                <form action="" id="hotel-details" class="container">
+                  <h3 class="title is-3">Hotel Details</h3>
+                  <div class="field">
+                    <label for="property_code" class="label is-small">Hotel Location</label>
+                    <p class="control">
+                      <span class="select is-small is-fullwidth">
+                      {{> property_selection}}
+                    </span>
+                    </p>
+                  </div>
+                  <!-- Hotel Location-->
+                  <div class="field">
+                    <label for="checkin_date" class="label is-small">Check In Date</label>
+                    <p class="control">
+                      <input type="date" id="checkin_date" class="input is-small" name="checkin_date" placeholder="Check In Date" />
+                    </p>
+                  </div>
+                  <!-- Check In Date -->
+                  <div class="field">
+                    <label for="nights" class="label is-small">Nights</label>
+                    <p class="control">
+                      <input type="number" id="nights" class="input is-small" name="nights" placeholder="Nights" />
+                    </p>
+                  </div>
+                  <!-- Nights -->
+                  <div class="field">
+                    <label for="checkout_date" class="label is-small">Check Out Date</label>
+                    <p class="control"><input type="date" id="checkout_date" class="input is-small" name="checkout_date" placeholder="Check Out Date" /></p>
+                  </div>
+                  <!-- Check Out Date -->
+                  <div class="field">
+                    <label for="adults" class="label is-small">Adults</label>
+                    <p class="control">
+                      <input type="number" id="adults" class="input is-small" name="adults" placeholder="Adult Count" />
+                    </p>
+                  </div>
+                  <!-- Adults -->
+                  <div class="field">
+                    <label for="children" class="label is-small">Children</label>
+                    <p class="control">
+                      <input type="number" id="children" class="input is-small" name="children" placeholder="Children" Count="" />
+                    </p>
+                  </div>
+                  <!-- Children -->
+                </form>
+              </div>
+            </div><!-- Booking Form --></script>
+  <!--Booking Form -->
+  
+  <script id="shopping_cart_tpl" type="text/x-handlebars-template">
+  <div class="panel">
+    <div class="panel-heading">
+      <h1 class="title is-4">Booking Summary</h1>
+    </div>
+    {{#each data.cart.items}}
+    <div class="box">
+      <a href="#" class="delete pull-right"></a>
+      <h1 class="title is-5">{{rateTypeDesc}}</h1>
+      <h2 class="subtitle is-6">{{roomTypeDesc}}</h2>
+      <table class="table">
+        <tr>
+          <td>
+            <p>Room Charges</p>
+          </td>
+          <td>
+            {{currencyCode}} {{roomCharges}}
+          </td>
+        </tr>
+        <tr>
+          <td>Tax and Charges</td>
+           <td>{{currencyCode}} {{otherCharges}}</td>
+        </tr>
+      </table>
+    </div>
+    {{/each}}
+    {{#with data.cart.summary}}
+    <div class="box">
+      <table class="table">
+        <tr>
+          <td>Sub Total</td>
+          <td>SGD 336.00</td>
+        </tr>
+        <tr>
+          <td>Tax and Charges</td>
+          <td>SGD 59.48</td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>SGD 395.48</td>
+        </tr>
+      </table>
+    </div>
+    {{/with}}
+  </div><!-- Shopping Cart -->
+  </script>
+  <!-- Shopping Cart -->
+  
+  <script id="sidebar_tpl" type="text/x-handlebars-template">
+    <div class="side-panel column is-one-third">
+      {{> booking_form}}
+      {{> shopping_cart}}
+    </div><!-- Side Panel -->
+  </script>
+  <!-- Sidebar -->
+  
+  <script id="property_info_tpl" type="text/x-handlebars-template">
+  <div class="property-information box">
+    <h1 class="title is-5">{{appContext.propertyInfoHeader}}</h1>
+    {{#with data.propertyInfo}}
+    <div class="media">
+      <div class="media-left">
+        <p class="image">
+          <img src="{{image}}" alt="" />
+        </p>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <p class="title is-4">{{name}}</p>
+          <p><small>{{description}}</small></p>
+        </div>
+      </div>
+    </div>
+    {{/with}}
+  </div>
+  <!-- Hotel Information-->
+  </script>
+  <!-- Property Info -->
+  
+  <script id="selloptions_filter_tpl" type="text/x-handlerbars-template">
+  <div class="filter-panel panel">
+    <div class="panel-heading">
+      <h1 class="title is-5">{{appContext.sellOptionsFilterHeader}}</h1>
+    </div>
+    <div class="panel-block columns">
+          <div class="column">
+            <div class="field">
+              <label for="currency" class="label is-small">Currency</label>
+              <p class="select is-small">
+                {{#with data}}
+                  {{> currency_selection}}
+                {{/with}}
+              </p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label for="sort_by" class="label is-small">Sort By</label>
+              <p class="select is-small">
+                <select name="sort_by" id="sort_by">
+                  <option value="low_hi">Low to High</option>
+                  <option value="hi_low">High to Low</option>
+                </select>
+              </p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="field">
+              <label for="rate_limit" class="label is-small">Rate Limit</label>
+              <p class="control is-small">
+                <input type="number" id="rate_limit" class="input is-small" name="rate_limit" placeholder="Rate Limit" />
+              </p>
+            </div>
+          </div>
+    </div>
+  </div>
+  <!-- Filter Panel-->
+  </script>
+  <!-- SellOptions Filter -->
+  
+  <script id="selloptions_pagination_tpl" type="text/x-handlebars-template">
+  <div class="panel-heading">
+    <nav class="pagination">
+      <p>5 Results Found</p>
+      <a href="#" class="pagination-previous">Previous</a>
+      <ul class="pagination-list">
+        <li><a href="#" class="pagination-link">1</a></li>
+        <li><a href="#" class="pagination-link">2</a></li>
+        <li><a href="#" class="pagination-link">3</a></li>
+      </ul>
+      <a href="#" class="pagination-next">Next</a>
+    </nav>
+  </div>
+  <!-- Pagination -->
+  </script>
+  <!-- SellOptions Pagination -->
+  
+  <script id="room_information_tpl" type="text/x-handlebars-template">
+  <div class="selloption panel-block">
+    <div class="media">
+      <div class="media-left">
+        <p class="image">
+          <img src="{{image}}" alt="" />
+        </p>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <span class="pull-right"><em>Sleeps {{guestLimit}}</em></span>
+          <h4>{{name}}</h4>
+          <p>{{description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Room Information -->
+  </script>
+  <!-- Room Information -->
+  
+  <script id="number_of_rooms_tpl" type="text/x-handlebars-template">
+  <form action="" class="ui form tiny">
+    <select name="" id="">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+    </select>
+  </form>
+  </script>
+  <!-- Number Of Rooms Booking -->
+  
+  <script id="rate_table_tpl" type="text/x-handlebars-template">
+  <div class="panel-block">
+    <table class="ui table">
+      {{#each rates}}
+        <tr>
+          <td>
+            <strong>{{name}}</strong>
+          </td>
+          <td>
+            <p>{{currencyCode}} {{quotedAmount}}</p>
+          </td>
+          <td>
+            {{> number_of_rooms}}
+          </td>
+          <td>
+            <button class="button is-primary is-small">Book</button>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+  </script>
+  <!-- Rate Table -->
+  
+  <script id="selloption_item_tpl" type="text/x-handlebars-template">
+  {{#with roomInfo}}
+    {{> room_information}}
+  {{/with}}
+  {{> rate_table}}
+  </script>
+  <!-- Sell Option Item -->
+  
+  <script id="selloptions_tpl" type="text/x-handlebars-template">
+  <div class="panel">
+    {{> selloptions_pagination}}
+    {{#with data}}
+      {{#each selloptions}}
+        {{> selloption_item}}
+      {{/each}}
+    {{/with}}
+    </div>
+  </div><!-- SellOptions -->
+  </script>
+  <!-- SellOptions -->
+  
+  <script id="main_tpl" type="text/x-handlebars-template">
+  <main>
+    <section class="section">
+      <div class="fluid-container">
+        <div class="columns">
+          {{> sidebar}}
+          <div class="main-panel column">
+            {{> property_info}}
+            {{> selloptions_filter}}
+            {{> selloptions}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  </script> <!-- Main -->
+  
+  <script id="footer_tpl" type="text/x-handlebars-template">
+  <footer>
+  </footer>
+  </script> <!-- Footer -->
+  
+  <script id="app_tpl" type="text/x-handlebars-template">
+  {{> header}}
+  {{> main}}
+  {{> footer}}
+  </script>
+  
+  <div id="app">
+  </div><!-- App -->
+  
+</body>
+</html>
